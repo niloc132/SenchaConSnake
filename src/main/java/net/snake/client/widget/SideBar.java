@@ -3,6 +3,7 @@ package net.snake.client.widget;
 import net.snake.shared.User;
 
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 import com.sencha.gxt.core.client.IdentityValueProvider;
@@ -13,14 +14,16 @@ public class SideBar implements IsWidget {
 	private FlowLayoutContainer sideBar;
 	private ListView<User, User> userList;
 
-	public SideBar(EventBus bus) {
+	public SideBar(EventBus bus, String userName, String room) {
 		//TODO watch for events
 		
 		
 		sideBar = new FlowLayoutContainer();
 		
+		Label name = new Label(room);
+		sideBar.add(name);
 		
-		//TODO store
+		//TODO store, use current Username to be at top of list
 		userList = new ListView<User, User>(null, new IdentityValueProvider<User>());
 		sideBar.add(userList);
 		
