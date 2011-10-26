@@ -17,8 +17,8 @@ public class Arena implements IsSerializable {
 		INITIALIZING, RUNNING, GAMEOVER
 	};
 
-	private final ArrayList<Snake> snakes = new ArrayList<Snake>();
-	private final ArrayList<Cell> food = new ArrayList<Cell>();
+	private ArrayList<Snake> snakes = new ArrayList<Snake>();
+	private ArrayList<Cell> food = new ArrayList<Cell>();
 	private State state;
 	private String name;
 

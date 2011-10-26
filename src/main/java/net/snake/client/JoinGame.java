@@ -46,18 +46,21 @@ public class JoinGame {
 		
 		window.show();
 	}
-	protected void callServer(Window window) {
+	protected void callServer(final Window window) {
 		window.mask("Working");
 		service.joinRoom(username.getValue(), game.getValue(), new AsyncCallback<Arena>() {
 			
 			@Override
 			public void onSuccess(Arena arena) {
+				window.unmask();
+				window.hide();
 				bus.fireEvent(new JoinGameEvent(arena, username.getValue()));
 			}
 			
 			@Override
 			public void onFailure(Throwable caught) {
-				new MessageBox("Error", caught.getMessage());
+				window.unmask();
+				new MessageBox("Error", caught.getMessage()).show();
 			}
 		});
 	}
