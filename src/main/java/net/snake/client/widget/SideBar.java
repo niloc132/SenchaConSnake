@@ -1,10 +1,11 @@
 package net.snake.client.widget;
 
+
 import net.snake.client.event.DirectionCommandEvent;
-import net.snake.client.event.DirectionCommandEvent.Direction;
 import net.snake.client.images.ButtonsTemplate;
 import net.snake.client.images.SnakeImages;
-import net.snake.shared.User;
+import net.snake.shared.models.Direction;
+import net.snake.shared.models.User;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
