@@ -164,7 +164,6 @@ public class GameEngine {
 	 * @param arena
 	 */
 	protected void processArena(final Arena arena) {
-		final ArrayList<Snake> deadSnakes = new ArrayList<Snake>();
 		for (final Snake snake : arena.getSnakes()) {
 			synchronized (snake) {
 				final Cell cell = snake.getCells().remove(snake.getCells().size() - 1);
