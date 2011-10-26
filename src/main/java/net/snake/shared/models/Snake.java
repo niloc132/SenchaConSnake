@@ -17,9 +17,10 @@ public class Snake implements IsSerializable {
 	private String userId;
 	private Direction newDirection;
 	private boolean alive;
+	private long score;
 
 	public Snake() {
-		alive=true;
+		alive = true;
 	}
 
 	public Snake(final String userId, final ArrayList<Cell> cells) {
@@ -34,6 +35,10 @@ public class Snake implements IsSerializable {
 
 	public Direction getDirection() {
 		return newDirection;
+	}
+
+	public long getScore() {
+		return score;
 	}
 
 	public String getUserId() {
@@ -56,6 +61,10 @@ public class Snake implements IsSerializable {
 
 	public void setDirection(final Direction newDirection) {
 		this.newDirection = newDirection;
+	}
+
+	public void setScore(final long score) {
+		this.score = score;
 	}
 
 	public void setUserId(final String userId) {

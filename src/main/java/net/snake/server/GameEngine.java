@@ -38,6 +38,8 @@ public class GameEngine {
 
 	protected static final long LOOP_DELAY = 100;
 	protected static final double DELTA = 0.025;
+	private static final long POINTS_TURN = 1L;
+	private static final long POINTS_FOOD = 100L;
 
 	private final Map<String, Arena> arenas = new HashMap<String, Arena>();
 	private final Map<String, Snake> userSnake = new HashMap<String, Snake>();
@@ -189,8 +191,9 @@ public class GameEngine {
 				}
 				if (!checkWallCollision(arena, cell) && !checkSnakeCollision(arena, cell)) {
 					snake.getCells().add(0, cell);
+					snake.setScore(snake.getScore() + POINTS_TURN);
 					if (checkFoodCollision(arena, cell)) {
-						// TODO points
+						snake.setScore(snake.getScore() + POINTS_FOOD);
 					}
 				} else {
 					kill(arena, snake);
