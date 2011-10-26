@@ -11,6 +11,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.sencha.gxt.widget.core.client.Window;
 import com.sencha.gxt.widget.core.client.box.MessageBox;
 import com.sencha.gxt.widget.core.client.button.TextButton;
+import com.sencha.gxt.widget.core.client.container.FlowLayoutContainer;
 import com.sencha.gxt.widget.core.client.event.SelectEvent;
 import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
 import com.sencha.gxt.widget.core.client.form.FieldLabel;
@@ -29,11 +30,13 @@ public class JoinGame {
 	
 	public void go() {
 		final Window window = new Window();
+		FlowLayoutContainer lc = new FlowLayoutContainer();
+		window.add(lc);
 		
-		window.add(new FieldLabel(username, "Username"));
-		window.add(new FieldLabel(game, "Game ID"));
+		lc.add(new FieldLabel(username, "Username"));
+		lc.add(new FieldLabel(game, "Game ID"));
 		
-		window.add(new TextButton("Go", new SelectHandler() {
+		lc.add(new TextButton("Go", new SelectHandler() {
 			
 			@Override
 			public void onSelect(SelectEvent event) {
