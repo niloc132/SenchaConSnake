@@ -1,7 +1,7 @@
 package net.snake.client;
 
 import net.snake.client.event.DirectionCommandEvent;
-import net.snake.client.event.DirectionCommandEvent.Direction;
+import net.snake.shared.models.Direction;
 
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -23,14 +23,14 @@ public final class KeyBoardControlMonitor implements NativePreviewHandler {
 	 * Creates a monitor for keyboard events. Call {@link Event#addNativePreviewHandler(NativePreviewHandler)} to watch for arrow keys, and remove it when finished.
 	 * @param bus the event bus the direction commands should be sent on
 	 */
-	public KeyBoardControlMonitor(EventBus bus) {
+	public KeyBoardControlMonitor(final EventBus bus) {
 		this.bus = bus;
 	}
 
 	@Override
-	public void onPreviewNativeEvent(NativePreviewEvent event) {
+	public void onPreviewNativeEvent(final NativePreviewEvent event) {
 		if (event.getTypeInt() == Event.ONKEYDOWN) {
-			NativeEvent nativeEvent = event.getNativeEvent();
+			final NativeEvent nativeEvent = event.getNativeEvent();
 			if (KeyDownEvent.isArrow(nativeEvent.getKeyCode())) {
 				event.cancel();
 				final Direction d;

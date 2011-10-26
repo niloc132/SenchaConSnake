@@ -26,8 +26,10 @@ public class GameEngine {
 	
 	private final Object arenaLock=new Object();
 	private final Object snakeLock=new Object();
+	
+	
 
-	public GameEngine() {
+	private GameEngine() {
 
 	}
 

@@ -3,8 +3,8 @@
  */
 package net.snake.shared.services;
 
-import net.snake.server.GameEngine.Action;
 import net.snake.shared.models.Arena;
+import net.snake.shared.models.Direction;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -22,9 +22,9 @@ public interface GameServiceAsync {
 
 	/**
 	 * 
-	 * @see net.snake.shared.services.GameService#performAction(java.lang.String, net.snake.server.GameEngine.Action)
+	 * @see net.snake.shared.services.GameService#performAction(java.lang.String, net.snake.shared.models.Direction)
 	 */
-	void performAction(String playerId, Action action, AsyncCallback<Arena> callback);
+	void performAction(String playerId, Direction direction, AsyncCallback<Arena> callback);
 
 	/**
 	 * 

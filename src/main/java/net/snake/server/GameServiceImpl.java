@@ -3,8 +3,8 @@
  */
 package net.snake.server;
 
-import net.snake.server.GameEngine.Action;
 import net.snake.shared.models.Arena;
+import net.snake.shared.models.Direction;
 import net.snake.shared.services.GameService;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -28,7 +28,7 @@ public class GameServiceImpl  extends RemoteServiceServlet implements GameServic
 	 * @see net.snake.shared.services.GameService#performAction(java.lang.String, net.snake.server.GameEngine.Action)
 	 */
 	@Override
-	public Arena performAction(final String playerId, final Action action) throws Exception {
+	public Arena performAction(final String playerId, final Direction direction) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
