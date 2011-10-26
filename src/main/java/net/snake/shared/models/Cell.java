@@ -25,17 +25,18 @@ public class Cell implements IsSerializable {
 	private double y;
 	private CellType cellType;
 
-	private Orientation orientation;
+	private Direction direction;
 
 	public Cell() {
 	}
 
-	public Cell(final double x, final double y, final double width, final double height, final Orientation orientation,
+	public Cell(final double x, final double y, final double width, final double height, final Direction
+			direction,
 			final CellType cellType) {
 		this.x = x;
 		this.y = y;
 		this.cellType = cellType;
-		this.orientation = orientation;
+		this.direction = direction;
 		this.width = width;
 		this.height = height;
 	}
@@ -44,12 +45,12 @@ public class Cell implements IsSerializable {
 		return cellType;
 	}
 
-	public double getHeight() {
-		return height;
+	public Direction getDirection() {
+		return direction;
 	}
 
-	public Orientation getOrientation() {
-		return orientation;
+	public double getHeight() {
+		return height;
 	}
 
 	public double getWidth() {
@@ -68,12 +69,12 @@ public class Cell implements IsSerializable {
 		this.cellType = cellType;
 	}
 
-	public void setHeight(final double height) {
-		this.height = height;
+	public void setDirection(final Direction direction) {
+		this.direction = direction;
 	}
 
-	public void setOrientation(final Orientation orientation) {
-		this.orientation = orientation;
+	public void setHeight(final double height) {
+		this.height = height;
 	}
 
 	public void setWidth(final double width) {
