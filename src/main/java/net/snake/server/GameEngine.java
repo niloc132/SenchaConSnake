@@ -13,13 +13,33 @@ import net.snake.shared.models.Cell;
 import net.snake.shared.models.Direction;
 import net.snake.shared.models.Snake;
 
+import com.sencha.gxt.core.client.util.PreciseRectangle;
+
 /**
  * @author Tony.Benbrahim
  *
  */
 public class GameEngine {
 
-	protected static final long LOOP_DELAY = 20;
+	class PreciseRectangleEx extends PreciseRectangle {
+
+		public PreciseRectangleEx(final double x, final double y, final double width, final double height) {
+			super(x, y, width, height);
+		}
+
+		public boolean intersects(final PreciseRectangle other) {
+			final boolean intersectX = (this.getX() > other.getX() && this.getX() < other.getX() + other.getWidth())
+					|| (other.getX() > this.getX() && other.getX() < this.getX() + this.getWidth());
+			final boolean intersectY = (this.getY() > other.getY() && this.getY() < other.getY() + other.getHeight())
+					|| (other.getY() > this.getY() && other.getY() < this.getY() + this.getHeight());
+			return intersectX && intersectY;
+		}
+	}
+
+	protected static final long LOOP_DELAY = 100;
+	protected static final double DELTA = 0.025;
+	private static final long POINTS_TURN = 1L;
+	private static final long POINTS_FOOD = 100L;
 
 	private final Map<String, Arena> arenas = new HashMap<String, Arena>();
 	private final Map<String, Snake> userSnake = new HashMap<String, Snake>();
@@ -62,7 +82,7 @@ public class GameEngine {
 			throw new IllegalArgumentException("player does not have a snake");
 		}
 		synchronized (snake) {
-			snake.setNewDirection(direction);
+			snake.setDirection(direction);
 		}
 	}
 
@@ -81,22 +101,16 @@ public class GameEngine {
 		for (int i = 0; i < 5; ++i) {
 			final double x = 0.25d + index * 0.20d;
 			final double y = 0.25d + 0.05d * i;
-			final Cell cell = new Cell(x, y, 0.05d, 0.05d, Cell.Orientation.NORTH, Cell.CellType.SNAKE);
+			final Cell cell = new Cell(x, y, 0.05d, 0.05d, Direction.NORTH, Cell.CellType.SNAKE);
 			cells.add(cell);
 		}
 		final Snake snake = new Snake(playerId, cells);
+		snake.setDirection(Direction.NORTH);
 		synchronized (userArenas) {
 			userArenas.put(playerId, arena);
 			synchronized (userSnake) {
 				userSnake.put(playerId, snake);
 			}
-		}
-	}
-
-	public void setDirection(final String playerId, final Direction direction) {
-		final Snake snake = getSnake(playerId);
-		synchronized (snake) {
-			snake.setNewDirection(direction);
 		}
 	}
 
@@ -106,10 +120,20 @@ public class GameEngine {
 			public void run() {
 				while (!interrupted) {
 					try {
-
+						synchronized (arenas) {
+							for (final Arena arena : arenas.values()) {
+								synchronized (arena) {
+									if (arena.getState() == State.RUNNING) {
+										processArena(arena);
+									}
+								}
+							}
+						}
 						Thread.sleep(LOOP_DELAY);
 					} catch (final InterruptedException e) {
-						e.printStackTrace();
+						break;
+					} catch (final Exception e) {
+						continue;
 					}
 				}
 			}
@@ -139,6 +163,55 @@ public class GameEngine {
 	}
 
 	/**
+	 * @param arena
+	 */
+	protected void processArena(final Arena arena) {
+		for (final Snake snake : arena.getSnakes()) {
+			synchronized (snake) {
+				final Cell cell = snake.getCells().remove(snake.getCells().size() - 1);
+				cell.setDirection(snake.getDirection());
+				final Cell headCell = snake.getCells().get(0);
+				switch (cell.getDirection()) {
+				case EAST:
+					cell.setX(headCell.getX() + headCell.getWidth());
+					cell.setY(headCell.getY());
+					break;
+				case NORTH:
+					cell.setX(headCell.getX());
+					cell.setY(headCell.getY() - headCell.getHeight());
+					break;
+				case WEST:
+					cell.setX(headCell.getX() - headCell.getWidth());
+					cell.setY(headCell.getY());
+					break;
+				case SOUTH:
+					cell.setX(headCell.getX());
+					cell.setY(headCell.getY() + headCell.getHeight());
+					break;
+				}
+				if (!checkWallCollision(arena, cell) && !checkSnakeCollision(arena, cell)) {
+					snake.getCells().add(0, cell);
+					snake.setScore(snake.getScore() + POINTS_TURN);
+					if (checkFoodCollision(arena, cell)) {
+						snake.setScore(snake.getScore() + POINTS_FOOD);
+					}
+				} else {
+					kill(arena, snake);
+				}
+			}
+		}
+		int numAlive = 0;
+		for (final Snake snake : arena.getSnakes()) {
+			if (snake.isAlive()) {
+				++numAlive;
+			}
+		}
+		if (numAlive == 0) {
+			arena.setState(State.GAMEOVER);
+		}
+	}
+
+	/**
 	 * @param roomId
 	 * @return
 	 */
@@ -151,6 +224,53 @@ public class GameEngine {
 	}
 
 	/**
+	 * @param snake
+	 * @return
+	 */
+	private boolean checkFoodCollision(final Arena arena, final Cell cell) {
+		final PreciseRectangleEx cellRect = new PreciseRectangleEx(cell.getX(), cell.getY(), cell.getWidth(), cell.getHeight());
+		for (final Cell foodCell : arena.getFood()) {
+			final PreciseRectangleEx snakeRect = new PreciseRectangleEx(foodCell.getX(), foodCell.getY(), foodCell.getWidth(),
+					foodCell.getHeight());
+			if (cellRect.intersects(snakeRect)) {
+				arena.getFood().remove(foodCell);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @param arena
+	 * @param cell
+	 * @return
+	 */
+	private boolean checkSnakeCollision(final Arena arena, final Cell cell) {
+		final PreciseRectangleEx cellRect = new PreciseRectangleEx(cell.getX(), cell.getY(), cell.getWidth(), cell.getHeight());
+		for (final Snake snake : arena.getSnakes()) {
+			if (snake.isAlive()) {
+				for (final Cell snakeCell : snake.getCells()) {
+					final PreciseRectangleEx snakeRect = new PreciseRectangleEx(snakeCell.getX(), snakeCell.getY(),
+							snakeCell.getWidth(), snakeCell.getHeight());
+					if (cellRect.intersects(snakeRect)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @param arena
+	 * @param cell
+	 * @return
+	 */
+	private boolean checkWallCollision(final Arena arena, final Cell cell) {
+		return cell.getX() < 0 || cell.getY() < 0 || cell.getX() > 1 || cell.getY() > 1;
+	}
+
+	/**
 	 * @param playerId
 	 * @return
 	 */
@@ -160,6 +280,14 @@ public class GameEngine {
 			throw new IllegalArgumentException("no snake assigned to player");
 		}
 		return snake;
+	}
+
+	/**
+	 * @param arena
+	 * @param snake
+	 */
+	private void kill(final Arena arena, final Snake snake) {
+		snake.setAlive(false);
 	}
 
 }
