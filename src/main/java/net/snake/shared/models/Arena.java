@@ -17,7 +17,7 @@ public class Arena implements IsSerializable {
 
 	private final ArrayList<Snake> snakes = new ArrayList<Snake>();
 	private final ArrayList<Cell> food = new ArrayList<Cell>();
-	private final State state;
+	private State state;
 
 	public Arena() {
 		state=State.INITIALIZING;
@@ -29,6 +29,14 @@ public class Arena implements IsSerializable {
 
 	public ArrayList<Snake> getSnakes() {
 		return snakes;
+	}
+
+	public State getState() {
+		return state;
+	}
+
+	public void setState(final State state) {
+		this.state = state;
 	}
 
 }
