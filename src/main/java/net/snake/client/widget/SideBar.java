@@ -2,20 +2,21 @@ package net.snake.client.widget;
 
 import net.snake.client.event.DirectionCommandEvent;
 import net.snake.client.event.DirectionCommandEvent.Direction;
+import net.snake.client.images.ButtonsTemplate;
 import net.snake.client.images.SnakeImages;
 import net.snake.shared.User;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.event.dom.client.TouchEvent;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 import com.sencha.gxt.core.client.IdentityValueProvider;
 import com.sencha.gxt.widget.core.client.ListView;
 import com.sencha.gxt.widget.core.client.button.IconButton;
-import com.sencha.gxt.widget.core.client.button.TextButton;
+import com.sencha.gxt.widget.core.client.container.AbstractHtmlLayoutContainer.HtmlData;
 import com.sencha.gxt.widget.core.client.container.FlowLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.HtmlLayoutContainer;
 
@@ -38,7 +39,7 @@ public class SideBar implements IsWidget {
 		//TODO store
 		userList = new ListView<User, User>(null, new IdentityValueProvider<User>());
 		sideBar.add(userList);
-		
+		sideBar.add(this.buildButtonsPanel());
 		
 		//TODO add buttons if touch
 		//TODO hook up events for buttons
@@ -49,7 +50,7 @@ public class SideBar implements IsWidget {
 		return sideBar;
 	}
 	
-	protected void buildButtonsPanel(){
+	protected HtmlLayoutContainer buildButtonsPanel(){
 		SnakeImages images=GWT.create(SnakeImages.class);
 		
 		this.north=new IconButton(images.resources().up());
@@ -104,6 +105,15 @@ public class SideBar implements IsWidget {
 				
 			}
 		});
+		
+		ButtonsTemplate template=GWT.create(ButtonsTemplate.class);
+		
+		HtmlLayoutContainer buttonContainer=new HtmlLayoutContainer(template.getTemplate());
+		buttonContainer.add(north, new HtmlData(".up"));
+		buttonContainer.add(south, new HtmlData("down"));
+		buttonContainer.add(east, new HtmlData("right"));
+		buttonContainer.add(west, new HtmlData("left"));
+		return buttonContainer;
 	}
 
 }
