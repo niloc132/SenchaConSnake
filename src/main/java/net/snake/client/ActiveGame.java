@@ -1,5 +1,6 @@
 package net.snake.client;
 
+import net.snake.client.event.ArenaTickEvent;
 import net.snake.client.event.DirectionCommandEvent;
 import net.snake.client.event.DirectionCommandEvent.DirectionCommandHandler;
 import net.snake.client.widget.ArenaView;
@@ -96,6 +97,7 @@ public class ActiveGame {
 	protected void step() {
 		// tell arena view of current arena
 		view.draw(currentArena);
+		bus.fireEvent(new ArenaTickEvent(currentArena));
 		
 		// schedule next call
 		//TODO if less than $TIME sec, call right away
@@ -104,6 +106,6 @@ public class ActiveGame {
 			public void run() {
 				poll();
 			}
-		}.schedule(1000);
+		}.schedule(100);
 	}
 }

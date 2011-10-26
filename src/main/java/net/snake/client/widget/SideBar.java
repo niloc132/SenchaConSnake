@@ -1,24 +1,31 @@
 package net.snake.client.widget;
 
 
+import net.snake.client.event.ArenaTickEvent;
+import net.snake.client.event.ArenaTickEvent.ArenaTickHandler;
 import net.snake.client.event.DirectionCommandEvent;
 import net.snake.client.images.ButtonsTemplate;
 import net.snake.client.images.SnakeImages;
 import net.snake.shared.models.Arena;
 import net.snake.shared.models.Direction;
+import net.snake.shared.models.Snake;
 import net.snake.shared.models.User;
+import net.snake.shared.models.Snake.SnakeProperties;
 import net.snake.shared.services.GameService;
 import net.snake.shared.services.GameServiceAsync;
 
+import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 import com.sencha.gxt.core.client.IdentityValueProvider;
+import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.widget.core.client.ListView;
 import com.sencha.gxt.widget.core.client.button.IconButton;
 import com.sencha.gxt.widget.core.client.button.TextButton;
@@ -31,12 +38,21 @@ import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
 
 public class SideBar implements IsWidget {
 	private VerticalLayoutContainer sideBar;
-	private ListView<User, User> userList;
+	private ListView<Snake, Snake> userList;
 	private EventBus bus;
 
 	public SideBar(EventBus bus, String userName, final String room) {
 		//TODO watch for events
 		this.bus=bus;
+		SnakeProperties props = GWT.create(SnakeProperties.class);
+		
+		final ListStore<Snake> store = new ListStore<Snake>(props.userId());
+		bus.addHandler(ArenaTickEvent.getType(), new ArenaTickHandler(){
+			@Override
+			public void onTick(ArenaTickEvent event) {
+				store.replaceAll(event.getArena().getSnakes());
+			}
+		});
 		
 		sideBar = new VerticalLayoutContainer();
 		
@@ -44,7 +60,17 @@ public class SideBar implements IsWidget {
 		sideBar.add(name, new VerticalLayoutData(1,-1));
 		
 		//TODO store, use current Username to be at top of list
-		userList = new ListView<User, User>(null, new IdentityValueProvider<User>());
+		userList = new ListView<Snake, Snake>(store, new IdentityValueProvider<Snake>());
+		userList.setCell(new AbstractCell<Snake>() {
+			@Override
+			public void render(com.google.gwt.cell.client.Cell.Context context,
+					Snake value, SafeHtmlBuilder sb) {
+				sb.appendEscaped(value.getUserId());
+				sb.appendEscaped("(");
+				sb.append(value.getScore());
+				sb.appendEscaped(")");
+			}
+		});
 		sideBar.add(userList, new VerticalLayoutData(1, 1));
 		sideBar.add(this.buildButtonsPanel(), new VerticalLayoutData(1,200));
 		TextButton start = new TextButton("Start", new SelectHandler() {

@@ -6,12 +6,18 @@ package net.snake.shared.models;
 import java.util.ArrayList;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
+import com.sencha.gxt.core.client.ValueProvider;
+import com.sencha.gxt.data.shared.ModelKeyProvider;
+import com.sencha.gxt.data.shared.PropertyAccess;
 
 /**
  * @author Tony.Benbrahim
  *
  */
 public class Snake implements IsSerializable {
+	public interface SnakeProperties extends PropertyAccess<Snake> {
+		ModelKeyProvider<Snake> userId();
+	}
 
 	private ArrayList<Cell> cells = new ArrayList<Cell>();
 	private String userId;

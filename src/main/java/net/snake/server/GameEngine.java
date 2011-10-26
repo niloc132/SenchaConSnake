@@ -110,8 +110,8 @@ public class GameEngine {
 		final ArrayList<Cell> cells = new ArrayList<Cell>();
 		for (int i = 0; i < 5; ++i) {
 			final double x = 0.25d + index * 0.20d;
-			final double y = 0.25d + 0.05d * i;
-			final Cell cell = new Cell(x, y, 0.05d, 0.05d, Direction.NORTH, Cell.CellType.SNAKE);
+			final double y = 0.25d + 0.02d * i;
+			final Cell cell = new Cell(x, y, 0.02d, 0.02d, Direction.NORTH, Cell.CellType.SNAKE);
 			cells.add(cell);
 		}
 		final Snake snake = new Snake(playerId, cells);
@@ -286,8 +286,8 @@ public class GameEngine {
 
 	private void createFood(final Arena arena) {
 		final Cell food = new Cell();
-		food.setWidth(0.03d);
-		food.setHeight(0.03d);
+		food.setWidth(0.02d);
+		food.setHeight(0.02d);
 		do {
 			food.setX(Math.random());
 			food.setY(Math.random());
