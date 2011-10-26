@@ -26,6 +26,8 @@ public interface GameServiceAsync {
 	 */
 	void performAction(String playerId, Direction direction, AsyncCallback<Arena> callback);
 
+	void poll(String roomId, AsyncCallback<Arena> callback);
+
 	/**
 	 * 
 	 * @see net.snake.shared.services.GameService#startGame(java.lang.String)

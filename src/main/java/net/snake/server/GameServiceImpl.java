@@ -3,6 +3,8 @@
  */
 package net.snake.server;
 
+import javax.servlet.ServletException;
+
 import net.snake.shared.models.Arena;
 import net.snake.shared.models.Direction;
 import net.snake.shared.services.GameService;
@@ -13,33 +15,49 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
  * @author Tony.Benbrahim
  *
  */
-public class GameServiceImpl  extends RemoteServiceServlet implements GameService{
+@SuppressWarnings("serial")
+public class GameServiceImpl extends RemoteServiceServlet implements GameService {
 
-	/* (non-Javadoc)
-	 * @see net.snake.shared.services.GameService#joinRoomlogin(java.lang.String, java.lang.String)
-	 */
+	private GameEngine engine;
+
+	@Override
+	public void destroy() {
+		try {
+			engine.stop();
+		} catch (final InterruptedException e) {
+			e.printStackTrace();
+		}
+		super.destroy();
+	}
+
+	@Override
+	public void init() throws ServletException {
+		super.init();
+		engine = new GameEngine();
+		engine.start();
+	}
+
 	@Override
 	public Arena joinRoom(final String userId, final String roomId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		engine.joinArena(roomId, userId);
+		return engine.getArena(roomId);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.snake.shared.services.GameService#performAction(java.lang.String, net.snake.server.GameEngine.Action)
-	 */
 	@Override
 	public Arena performAction(final String playerId, final Direction direction) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		engine.handleAction(playerId, direction);
+		return engine.getArenaForPlayer(playerId);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.snake.shared.services.GameService#startGame(java.lang.String)
-	 */
+	@Override
+	public Arena poll(final String roomId) throws Exception {
+		return engine.getArena(roomId);
+	}
+
 	@Override
 	public Arena startGame(final String roomId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		engine.startAreana(roomId);
+		return engine.getArena(roomId);
 	}
 
 }

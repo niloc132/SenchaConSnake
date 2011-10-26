@@ -1,0 +1,7 @@
+@sprite .up {gwt-image: "north";} 
+  
+@sprite .down {gwt-image: "south";} 
+  
+@sprite .left {gwt-image: "west";} 
+
+@sprite .right {gwt-image: "east";} 
