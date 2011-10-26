@@ -11,7 +11,7 @@
 
 	<servlet-mapping>
 		<servlet-name>GameService</servlet-name>
-		<url-pattern>/GameService</url-pattern>
+		<url-pattern>/snake/GameService</url-pattern>
 	</servlet-mapping>
 
 	<!-- Default page to serve -->

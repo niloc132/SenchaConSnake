@@ -22,14 +22,6 @@ public class Arena implements IsSerializable {
 	private State state;
 	private String name;
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public Arena() {
 		state = State.INITIALIZING;
 	}
@@ -38,12 +30,20 @@ public class Arena implements IsSerializable {
 		return food;
 	}
 
+	public String getName() {
+		return name;
+	}
+
 	public ArrayList<Snake> getSnakes() {
 		return snakes;
 	}
 
 	public State getState() {
 		return state;
+	}
+
+	public void setName(final String name) {
+		this.name = name;
 	}
 
 	public void setState(final State state) {
