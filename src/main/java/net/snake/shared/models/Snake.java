@@ -37,6 +37,10 @@ public class Snake implements IsSerializable {
 		return newDirection;
 	}
 
+	public Direction getNewDirection() {
+		return newDirection;
+	}
+
 	public long getScore() {
 		return score;
 	}
@@ -59,7 +63,15 @@ public class Snake implements IsSerializable {
 		this.alive = alive;
 	}
 
+	public void setCells(final ArrayList<Cell> cells) {
+		this.cells = cells;
+	}
+
 	public void setDirection(final Direction newDirection) {
+		this.newDirection = newDirection;
+	}
+
+	public void setNewDirection(final Direction newDirection) {
 		this.newDirection = newDirection;
 	}
 

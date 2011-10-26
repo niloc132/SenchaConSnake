@@ -59,6 +59,8 @@ public class GameEngine {
 		final Arena arena = new Arena();
 		synchronized (arenas) {
 			arenas.put(roomId, arena);
+			createFood(arena);
+			createFood(arena);
 		}
 	}
 
@@ -167,36 +169,39 @@ public class GameEngine {
 	 */
 	protected void processArena(final Arena arena) {
 		for (final Snake snake : arena.getSnakes()) {
-			synchronized (snake) {
-				final Cell cell = snake.getCells().remove(snake.getCells().size() - 1);
-				cell.setDirection(snake.getDirection());
-				final Cell headCell = snake.getCells().get(0);
-				switch (cell.getDirection()) {
-				case EAST:
-					cell.setX(headCell.getX() + headCell.getWidth());
-					cell.setY(headCell.getY());
-					break;
-				case NORTH:
-					cell.setX(headCell.getX());
-					cell.setY(headCell.getY() - headCell.getHeight());
-					break;
-				case WEST:
-					cell.setX(headCell.getX() - headCell.getWidth());
-					cell.setY(headCell.getY());
-					break;
-				case SOUTH:
-					cell.setX(headCell.getX());
-					cell.setY(headCell.getY() + headCell.getHeight());
-					break;
-				}
-				if (!checkWallCollision(arena, cell) && !checkSnakeCollision(arena, cell)) {
-					snake.getCells().add(0, cell);
-					snake.setScore(snake.getScore() + POINTS_TURN);
-					if (checkFoodCollision(arena, cell)) {
-						snake.setScore(snake.getScore() + POINTS_FOOD);
+			if (snake.isAlive()) {
+				synchronized (snake) {
+					final Cell cell = snake.getCells().remove(snake.getCells().size() - 1);
+					cell.setDirection(snake.getDirection());
+					final Cell headCell = snake.getCells().get(0);
+					switch (cell.getDirection()) {
+					case EAST:
+						cell.setX(headCell.getX() + headCell.getWidth());
+						cell.setY(headCell.getY());
+						break;
+					case NORTH:
+						cell.setX(headCell.getX());
+						cell.setY(headCell.getY() - headCell.getHeight());
+						break;
+					case WEST:
+						cell.setX(headCell.getX() - headCell.getWidth());
+						cell.setY(headCell.getY());
+						break;
+					case SOUTH:
+						cell.setX(headCell.getX());
+						cell.setY(headCell.getY() + headCell.getHeight());
+						break;
 					}
-				} else {
-					kill(arena, snake);
+					if (!checkWallCollision(arena, cell) && !checkSnakeCollision(arena, cell)) {
+						snake.getCells().add(0, cell);
+						snake.setScore(snake.getScore() + POINTS_TURN);
+						if (checkFoodCollision(arena, cell)) {
+							snake.setScore(snake.getScore() + POINTS_FOOD);
+							createFood(arena);
+						}
+					} else {
+						kill(arena, snake);
+					}
 				}
 			}
 		}
@@ -270,6 +275,17 @@ public class GameEngine {
 		return cell.getX() < 0 || cell.getY() < 0 || cell.getX() > 1 || cell.getY() > 1;
 	}
 
+	private void createFood(final Arena arena) {
+		final Cell food = new Cell();
+		food.setWidth(0.3d);
+		food.setHeight(0.3d);
+		do {
+			food.setX(Math.random());
+			food.setY(Math.random());
+		} while (checkSnakeCollision(arena, food));
+		arena.getFood().add(food);
+	}
+
 	/**
 	 * @param playerId
 	 * @return
@@ -289,5 +305,4 @@ public class GameEngine {
 	private void kill(final Arena arena, final Snake snake) {
 		snake.setAlive(false);
 	}
-
 }
