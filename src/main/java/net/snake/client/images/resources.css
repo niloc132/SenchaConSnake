@@ -1,0 +1,38 @@
+@CHARSET "ISO-8859-1";
+
+@sprite .up {gwt-image: "imageAccessor"; other: property;} 
+  .up {
+    background-image: url(UpArrow.png);
+    background-position: ...;
+    width: 32px;
+    height: 32px;
+    other: property;
+  }
+  
+@sprite .down {gwt-image: "imageAccessor"; other: property;} 
+  .down {
+    background-image: url(DownArrow.png);
+    background-position: ...;
+    width: 32px;
+    height: 32px;
+    other: property;
+  }
+  
+@sprite .left {gwt-image: "imageAccessor"; other: property;} 
+  .left {
+    background-image: url(LeftArrow.png);
+    background-position: ...;
+    width: 32px;
+    height: 32px;
+    other: property;
+  }
+
+@sprite .right {gwt-image: "imageAccessor"; other: property;} 
+  .up {
+    background-image: url(RightArrow.png);
+    background-position: ...;
+    width: 32px;
+    height: 32px;
+    other: property;
+  }
+  
