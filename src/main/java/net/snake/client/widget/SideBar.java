@@ -4,12 +4,16 @@ package net.snake.client.widget;
 import net.snake.client.event.DirectionCommandEvent;
 import net.snake.client.images.ButtonsTemplate;
 import net.snake.client.images.SnakeImages;
+import net.snake.shared.models.Arena;
 import net.snake.shared.models.Direction;
 import net.snake.shared.models.User;
+import net.snake.shared.services.GameService;
+import net.snake.shared.services.GameServiceAsync;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -17,28 +21,49 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.sencha.gxt.core.client.IdentityValueProvider;
 import com.sencha.gxt.widget.core.client.ListView;
 import com.sencha.gxt.widget.core.client.button.IconButton;
+import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.container.AbstractHtmlLayoutContainer.HtmlData;
-import com.sencha.gxt.widget.core.client.container.FlowLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.HtmlLayoutContainer;
+import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer;
+import com.sencha.gxt.widget.core.client.container.VerticalLayoutContainer.VerticalLayoutData;
+import com.sencha.gxt.widget.core.client.event.SelectEvent;
+import com.sencha.gxt.widget.core.client.event.SelectEvent.SelectHandler;
 
 public class SideBar implements IsWidget {
-	private FlowLayoutContainer sideBar;
+	private VerticalLayoutContainer sideBar;
 	private ListView<User, User> userList;
 	private EventBus bus;
 
-	public SideBar(EventBus bus, String userName, String room) {
+	public SideBar(EventBus bus, String userName, final String room) {
 		//TODO watch for events
 		this.bus=bus;
 		
-		sideBar = new FlowLayoutContainer();
+		sideBar = new VerticalLayoutContainer();
 		
-		//Label name = new Label(room);
-		//sideBar.add(name);
+		Label name = new Label(room);
+		sideBar.add(name, new VerticalLayoutData(1,-1));
 		
 		//TODO store, use current Username to be at top of list
 		userList = new ListView<User, User>(null, new IdentityValueProvider<User>());
-		sideBar.add(userList);
-		sideBar.add(this.buildButtonsPanel());
+		sideBar.add(userList, new VerticalLayoutData(1, 1));
+		sideBar.add(this.buildButtonsPanel(), new VerticalLayoutData(1,-1));
+		TextButton start = new TextButton("Start", new SelectHandler() {
+			@Override
+			public void onSelect(SelectEvent event) {
+				GameServiceAsync server = GWT.create(GameService.class);
+				server.startGame(room, new AsyncCallback<Arena>() {
+					@Override
+					public void onSuccess(Arena result) {
+						//no op
+					}
+					@Override
+					public void onFailure(Throwable caught) {
+						//no op
+					}
+				});
+			}
+		});
+		sideBar.add(start, new VerticalLayoutData(1,-1));
 		
 		//TODO add buttons if touch
 		//TODO hook up events for buttons

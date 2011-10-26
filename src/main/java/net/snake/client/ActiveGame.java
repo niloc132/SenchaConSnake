@@ -46,7 +46,7 @@ public class ActiveGame {
 		Event.addNativePreviewHandler(new KeyBoardControlMonitor(bus));
 		
 		// create the sidebar with controls and scores
-		SideBar east = new SideBar(bus, user, null);//XXX null
+		SideBar east = new SideBar(bus, user, currentArena.getName());
 		BorderLayoutData eastData = new BorderLayoutData(300);
 		root.setEastWidget(east, eastData);
 		
