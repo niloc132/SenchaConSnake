@@ -46,7 +46,7 @@ public class SideBar implements IsWidget {
 		//TODO store, use current Username to be at top of list
 		userList = new ListView<User, User>(null, new IdentityValueProvider<User>());
 		sideBar.add(userList, new VerticalLayoutData(1, 1));
-		sideBar.add(this.buildButtonsPanel(), new VerticalLayoutData(1,-1));
+		sideBar.add(this.buildButtonsPanel(), new VerticalLayoutData(1,200));
 		TextButton start = new TextButton("Start", new SelectHandler() {
 			@Override
 			public void onSelect(SelectEvent event) {

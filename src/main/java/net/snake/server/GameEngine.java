@@ -57,6 +57,7 @@ public class GameEngine {
 	 */
 	public void buildArena(final String roomId) {
 		final Arena arena = new Arena();
+		arena.setName(roomId);
 		synchronized (arenas) {
 			arenas.put(roomId, arena);
 			createFood(arena);
@@ -94,7 +95,14 @@ public class GameEngine {
 	 * @param playerId
 	 */
 	public void joinArena(final String roomId, final String playerId) {
-		final Arena arena = getArena(roomId);
+		 Arena arena;
+		try {
+			arena = getArena(roomId);
+		} catch (IllegalArgumentException ex) {
+			buildArena(roomId);
+			
+			arena = getArena(roomId);
+		}
 		int index;
 		synchronized (arena) {
 			index = arena.getSnakes().size();
@@ -108,6 +116,7 @@ public class GameEngine {
 		}
 		final Snake snake = new Snake(playerId, cells);
 		snake.setDirection(Direction.NORTH);
+		arena.getSnakes().add(snake);
 		synchronized (userArenas) {
 			userArenas.put(playerId, arena);
 			synchronized (userSnake) {
@@ -277,8 +286,8 @@ public class GameEngine {
 
 	private void createFood(final Arena arena) {
 		final Cell food = new Cell();
-		food.setWidth(0.3d);
-		food.setHeight(0.3d);
+		food.setWidth(0.03d);
+		food.setHeight(0.03d);
 		do {
 			food.setX(Math.random());
 			food.setY(Math.random());
