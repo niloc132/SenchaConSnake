@@ -19,6 +19,8 @@ public interface GameService extends RemoteService {
 	Arena joinRoom(String userId, String roomId) throws Exception;
 
 	Arena performAction(String playerId, Direction direction) throws Exception;
+	
+	Arena poll(String roomId) throws Exception;
 
 	Arena startGame(String roomId) throws Exception;
 

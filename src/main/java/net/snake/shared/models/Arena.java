@@ -12,19 +12,26 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  *
  */
 public class Arena implements IsSerializable {
-	
-	public enum State{ INITIALIZING, RUNNING, GAMEOVER};
+
+	public enum State {
+		INITIALIZING, RUNNING, GAMEOVER
+	};
 
 	private final ArrayList<Snake> snakes = new ArrayList<Snake>();
 	private final ArrayList<Cell> food = new ArrayList<Cell>();
 	private State state;
+	private String name;
 
 	public Arena() {
-		state=State.INITIALIZING;
+		state = State.INITIALIZING;
 	}
 
 	public ArrayList<Cell> getFood() {
 		return food;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	public ArrayList<Snake> getSnakes() {
@@ -33,6 +40,10 @@ public class Arena implements IsSerializable {
 
 	public State getState() {
 		return state;
+	}
+
+	public void setName(final String name) {
+		this.name = name;
 	}
 
 	public void setState(final State state) {

@@ -3,12 +3,14 @@
  */
 package net.snake.server;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import net.snake.shared.models.Arena;
+import net.snake.shared.models.Arena.State;
 import net.snake.shared.models.Cell;
-import net.snake.shared.models.Pivot;
+import net.snake.shared.models.Direction;
 import net.snake.shared.models.Snake;
 
 /**
@@ -17,18 +19,12 @@ import net.snake.shared.models.Snake;
  */
 public class GameEngine {
 
-	public enum Action {
-		UP, DOWN, LEFT, RIGHT
-	}
-
 	protected static final long LOOP_DELAY = 20;
 
 	private final Map<String, Arena> arenas = new HashMap<String, Arena>();
 	private final Map<String, Snake> userSnake = new HashMap<String, Snake>();
 	private final Map<String, Arena> userArenas = new HashMap<String, Arena>();
 
-	private final Object arenaLock = new Object();
-	private final Object snakeLock = new Object();
 	private boolean interrupted;
 	private Thread thread;
 
@@ -41,14 +37,33 @@ public class GameEngine {
 	 */
 	public void buildArena(final String roomId) {
 		final Arena arena = new Arena();
-		arenas.put(roomId, arena);
+		synchronized (arenas) {
+			arenas.put(roomId, arena);
+		}
 	}
 
-	public void handleAction(final String roomId, final String playerId, final Action action) {
-		final Arena arena = getArena(roomId);
+	/**
+	 * @param playerId
+	 * @return
+	 */
+	public Arena getArenaForPlayer(final String playerId) {
+		synchronized (userArenas) {
+			final Arena arena = userArenas.get(playerId);
+			if (arena == null) {
+				throw new IllegalArgumentException("No room for player");
+			}
+			return arena;
+		}
+	}
+
+	public void handleAction(final String playerId, final Direction direction) {
 		final Snake snake = getSnake(playerId);
-		final Cell headCell = snake.getCells().get(0);
-		snake.addPivot(new Pivot(headCell.getX(), headCell.getY()));
+		if (snake == null) {
+			throw new IllegalArgumentException("player does not have a snake");
+		}
+		synchronized (snake) {
+			snake.setNewDirection(direction);
+		}
 	}
 
 	/**
@@ -58,12 +73,30 @@ public class GameEngine {
 	 */
 	public void joinArena(final String roomId, final String playerId) {
 		final Arena arena = getArena(roomId);
-		final Snake snake = new Snake();
-		synchronized (arenaLock) {
+		int index;
+		synchronized (arena) {
+			index = arena.getSnakes().size();
+		}
+		final ArrayList<Cell> cells = new ArrayList<Cell>();
+		for (int i = 0; i < 5; ++i) {
+			final double x = 0.25d + index * 0.20d;
+			final double y = 0.25d + 0.05d * i;
+			final Cell cell = new Cell(x, y, 0.05d, 0.05d, Cell.Orientation.NORTH, Cell.CellType.SNAKE);
+			cells.add(cell);
+		}
+		final Snake snake = new Snake(playerId, cells);
+		synchronized (userArenas) {
 			userArenas.put(playerId, arena);
-			synchronized (snakeLock) {
+			synchronized (userSnake) {
 				userSnake.put(playerId, snake);
 			}
+		}
+	}
+
+	public void setDirection(final String playerId, final Direction direction) {
+		final Snake snake = getSnake(playerId);
+		synchronized (snake) {
+			snake.setNewDirection(direction);
 		}
 	}
 
@@ -71,10 +104,9 @@ public class GameEngine {
 		final Runnable runnable = new Runnable() {
 			@Override
 			public void run() {
-				while(!interrupted){
+				while (!interrupted) {
 					try {
 
-						
 						Thread.sleep(LOOP_DELAY);
 					} catch (final InterruptedException e) {
 						e.printStackTrace();
@@ -88,6 +120,19 @@ public class GameEngine {
 		thread.start();
 	}
 
+	/**
+	 * @param roomId
+	 */
+	public void startAreana(final String roomId) {
+		final Arena arena = getArena(roomId);
+		if (arena.getState() == State.INITIALIZING || arena.getState() == State.GAMEOVER) {
+			synchronized (arena) {
+				arena.setState(State.RUNNING);
+			}
+		}
+
+	}
+
 	public void stop() throws InterruptedException {
 		interrupted = true;
 		thread.wait();
@@ -97,7 +142,7 @@ public class GameEngine {
 	 * @param roomId
 	 * @return
 	 */
-	private synchronized Arena getArena(final String roomId) {
+	synchronized Arena getArena(final String roomId) {
 		final Arena arena = arenas.get(roomId);
 		if (arena == null) {
 			throw new IllegalArgumentException("Invalid room id");
