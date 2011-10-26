@@ -8,6 +8,7 @@ import java.util.Map;
 
 import net.snake.shared.models.Arena;
 import net.snake.shared.models.Cell;
+import net.snake.shared.models.Pivot;
 import net.snake.shared.models.Snake;
 
 /**
@@ -20,17 +21,18 @@ public class GameEngine {
 		UP, DOWN, LEFT, RIGHT
 	}
 
+	protected static final long LOOP_DELAY = 20;
+
 	private final Map<String, Arena> arenas = new HashMap<String, Arena>();
 	private final Map<String, Snake> userSnake = new HashMap<String, Snake>();
 	private final Map<String, Arena> userArenas = new HashMap<String, Arena>();
-	
-	private final Object arenaLock=new Object();
-	private final Object snakeLock=new Object();
-	
-	
 
-	private GameEngine() {
+	private final Object arenaLock = new Object();
+	private final Object snakeLock = new Object();
+	private boolean interrupted;
+	private Thread thread;
 
+	public GameEngine() {
 	}
 
 	/**
@@ -57,12 +59,38 @@ public class GameEngine {
 	public void joinArena(final String roomId, final String playerId) {
 		final Arena arena = getArena(roomId);
 		final Snake snake = new Snake();
-		synchronized(arenaLock){
+		synchronized (arenaLock) {
 			userArenas.put(playerId, arena);
-			synchronized(snakeLock){
+			synchronized (snakeLock) {
 				userSnake.put(playerId, snake);
 			}
 		}
+	}
+
+	public void start() {
+		final Runnable runnable = new Runnable() {
+			@Override
+			public void run() {
+				while(!interrupted){
+					try {
+
+						
+						Thread.sleep(LOOP_DELAY);
+					} catch (final InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+
+		};
+		interrupted = false;
+		thread = new Thread(runnable, "GameEngine");
+		thread.start();
+	}
+
+	public void stop() throws InterruptedException {
+		interrupted = true;
+		thread.wait();
 	}
 
 	/**

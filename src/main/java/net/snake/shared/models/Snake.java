@@ -5,7 +5,6 @@ package net.snake.shared.models;
 
 import java.util.ArrayList;
 
-import net.snake.server.Pivot;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
