@@ -1,6 +1,6 @@
 package net.snake.client.widget;
 
-import net.snake.shared.User;
+import net.snake.shared.models.User;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;

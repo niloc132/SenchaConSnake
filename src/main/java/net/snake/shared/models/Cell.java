@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.snake.shared;
+package net.snake.shared.models;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 

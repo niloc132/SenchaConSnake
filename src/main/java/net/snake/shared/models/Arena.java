@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.snake.shared;
+package net.snake.shared.models;
 
 import java.util.ArrayList;
 
@@ -12,16 +12,15 @@ import com.google.gwt.user.client.rpc.IsSerializable;
  *
  */
 public class Arena implements IsSerializable {
+	
+	public enum State{ INITIALIZING, RUNNING, GAMEOVER};
 
-	private ArrayList<Snake> snakes = new ArrayList<Snake>();
-	private ArrayList<Cell> food = new ArrayList<Cell>();
+	private final ArrayList<Snake> snakes = new ArrayList<Snake>();
+	private final ArrayList<Cell> food = new ArrayList<Cell>();
+	private final State state;
 
 	public Arena() {
-	}
-
-	public Arena(final ArrayList<Snake> snakes, final ArrayList<Cell> food) {
-		this.snakes = snakes;
-		 this.food=food;
+		state=State.INITIALIZING;
 	}
 
 	public ArrayList<Cell> getFood() {

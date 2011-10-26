@@ -1,4 +1,4 @@
-package net.snake.shared;
+package net.snake.shared.models;
 
 public interface User {
 	String getUsername();
