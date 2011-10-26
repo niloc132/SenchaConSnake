@@ -10,7 +10,6 @@ import net.snake.shared.models.User;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.TouchEvent;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
@@ -24,10 +23,6 @@ import com.sencha.gxt.widget.core.client.container.HtmlLayoutContainer;
 public class SideBar implements IsWidget {
 	private FlowLayoutContainer sideBar;
 	private ListView<User, User> userList;
-	private IconButton north;
-	private IconButton east;
-	private IconButton south;
-	private IconButton west;
 	private EventBus bus;
 
 	public SideBar(EventBus bus) {
@@ -53,12 +48,12 @@ public class SideBar implements IsWidget {
 	
 	protected HtmlLayoutContainer buildButtonsPanel(){
 		SnakeImages images=GWT.create(SnakeImages.class);
+		images.resources().ensureInjected();
 		
-		this.north=new IconButton(images.resources().up());
-		this.north.setWidth(32);
-		this.north.setHeight(32);
-		this.north.addClickHandler(new ClickHandler() {
-			
+		IconButton north=new IconButton(images.resources().up());
+		north.setWidth(48);
+		north.setHeight(48);
+		north.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				DirectionCommandEvent northEvent=new DirectionCommandEvent(Direction.NORTH);
@@ -66,11 +61,10 @@ public class SideBar implements IsWidget {
 			}
 		});
 		
-		this.south=new IconButton(images.resources().down());
-		this.south.setWidth(32);
-		this.south.setHeight(32);
-		this.south.addClickHandler(new ClickHandler() {
-			
+		IconButton south=new IconButton(images.resources().down());
+		south.setWidth(48);
+		south.setHeight(48);
+		south.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				DirectionCommandEvent southEvent=new DirectionCommandEvent(Direction.SOUTH);
@@ -79,12 +73,11 @@ public class SideBar implements IsWidget {
 			}
 		});
 		
-		this.east=new IconButton(images.resources().right());
-		this.east.setWidth(32);
-		this.east.setHeight(32);
+		IconButton east=new IconButton(images.resources().right());
+		east.setWidth(48);
+		east.setHeight(48);
 
-		this.east.addClickHandler(new ClickHandler() {
-			
+		east.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				DirectionCommandEvent eastEvent=new DirectionCommandEvent(Direction.EAST);
@@ -93,12 +86,11 @@ public class SideBar implements IsWidget {
 			}
 		});
 		
-		this.west=new IconButton(images.resources().left());
-		this.west.setWidth(32);
-		this.west.setHeight(32);
+		IconButton west=new IconButton(images.resources().left());
+		west.setWidth(48);
+		west.setHeight(48);
 
-		this.west.addClickHandler(new ClickHandler() {
-			
+		west.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				DirectionCommandEvent westEvent=new DirectionCommandEvent(Direction.WEST);
@@ -110,10 +102,10 @@ public class SideBar implements IsWidget {
 		ButtonsTemplate template=GWT.create(ButtonsTemplate.class);
 		
 		HtmlLayoutContainer buttonContainer=new HtmlLayoutContainer(template.getTemplate());
-		buttonContainer.add(north, new HtmlData(".up"));
-		buttonContainer.add(south, new HtmlData("down"));
-		buttonContainer.add(east, new HtmlData("right"));
-		buttonContainer.add(west, new HtmlData("left"));
+		buttonContainer.add(north, new HtmlData(".top"));
+		buttonContainer.add(south, new HtmlData(".bottom"));
+		buttonContainer.add(east, new HtmlData(".right"));
+		buttonContainer.add(west, new HtmlData(".left"));
 		return buttonContainer;
 	}
 

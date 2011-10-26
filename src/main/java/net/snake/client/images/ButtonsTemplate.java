@@ -5,7 +5,7 @@ import com.sencha.gxt.core.client.XTemplates;
 
 public interface ButtonsTemplate extends XTemplates {
 	
-	@XTemplate("buttonTemplate.html")
+	@XTemplate(source = "buttonTemplate.html")
 	SafeHtml getTemplate();
 
 }

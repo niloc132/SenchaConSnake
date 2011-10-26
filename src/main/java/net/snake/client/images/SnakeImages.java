@@ -1,7 +1,6 @@
 package net.snake.client.images;
 
 import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 
 public interface SnakeImages extends ClientBundle {
