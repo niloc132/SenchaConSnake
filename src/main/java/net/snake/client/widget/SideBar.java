@@ -72,7 +72,7 @@ public class SideBar implements IsWidget {
 			}
 		});
 		sideBar.add(userList, new VerticalLayoutData(1, 1));
-		sideBar.add(this.buildButtonsPanel(), new VerticalLayoutData(1,200));
+		sideBar.add(this.buildButtonsPanel(), new VerticalLayoutData(1,250));
 		TextButton start = new TextButton("Start", new SelectHandler() {
 			@Override
 			public void onSelect(SelectEvent event) {

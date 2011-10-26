@@ -61,10 +61,12 @@ public class ArenaView extends Composite
 
         for (final Snake snake : arena.getSnakes())
         {
-            for (final Cell snakeCell : snake.getCells())
-            {
-                draw(snakeCell, SNAKE_COLOR);
-            }
+        	if (snake.isAlive()) {
+	            for (final Cell snakeCell : snake.getCells())
+	            {
+	                draw(snakeCell, SNAKE_COLOR);
+	            }
+        	}
         }
 
         for (final Sprite oldSprite : old)

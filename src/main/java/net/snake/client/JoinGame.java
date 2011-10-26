@@ -26,6 +26,7 @@ public class JoinGame {
 	private EventBus bus;
 	public JoinGame(EventBus bus) {
 		this.bus = bus;
+		game.setValue("SenchaCon");
 	}
 	
 	public void go() {
