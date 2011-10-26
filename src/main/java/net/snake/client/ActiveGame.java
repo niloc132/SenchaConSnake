@@ -2,6 +2,7 @@ package net.snake.client;
 
 import net.snake.client.widget.CustomViewport;
 import net.snake.client.widget.SideBar;
+import net.snake.shared.models.Arena;
 
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -11,18 +12,24 @@ import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer.BorderL
 
 public class ActiveGame {
 	private final EventBus bus;
-	public ActiveGame(EventBus bus) {
+	private final String user;
+	
+	private Arena currentArena;
+	
+	public ActiveGame(EventBus bus, Arena initialArena, String user) {
 		this.bus = bus;
+		this.currentArena = initialArena;
+		this.user = user;
 	}
 	
-	public void start(String user, String gameId) {
+	public void start() {
 		BorderLayoutContainer root = new BorderLayoutContainer();
 
 		// start watching keyboard commands
 		Event.addNativePreviewHandler(new KeyBoardControlMonitor(bus));
 		
 		// create the sidebar with controls and scores
-		SideBar east = new SideBar(bus, user, gameId);
+		SideBar east = new SideBar(bus, user, null);//XXX null
 		BorderLayoutData eastData = new BorderLayoutData(300);
 		root.setEastWidget(east, eastData);
 		

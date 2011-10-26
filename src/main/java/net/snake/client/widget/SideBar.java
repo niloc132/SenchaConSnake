@@ -20,8 +20,8 @@ public class SideBar implements IsWidget {
 		
 		sideBar = new FlowLayoutContainer();
 		
-		Label name = new Label(room);
-		sideBar.add(name);
+		//Label name = new Label(room);
+		//sideBar.add(name);
 		
 		//TODO store, use current Username to be at top of list
 		userList = new ListView<User, User>(null, new IdentityValueProvider<User>());
