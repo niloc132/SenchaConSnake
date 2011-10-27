@@ -180,33 +180,35 @@ public class GameEngine {
 		for (final Snake snake : arena.getSnakes()) {
 			if (snake.isAlive()) {
 				synchronized (snake) {
-					final Cell cell = snake.getCells().remove(snake.getCells().size() - 1);
-					cell.setDirection(snake.getDirection());
+					final Cell nextCell = new Cell(0, 0, 0.02d, 0.02d, Direction.NORTH, Cell.CellType.SNAKE);
+					nextCell.setDirection(snake.getDirection());
 					final Cell headCell = snake.getCells().get(0);
-					switch (cell.getDirection()) {
+					switch (nextCell.getDirection()) {
 					case EAST:
-						cell.setX(headCell.getX() + headCell.getWidth());
-						cell.setY(headCell.getY());
+						nextCell.setX(headCell.getX() + headCell.getWidth());
+						nextCell.setY(headCell.getY());
 						break;
 					case NORTH:
-						cell.setX(headCell.getX());
-						cell.setY(headCell.getY() - headCell.getHeight());
+						nextCell.setX(headCell.getX());
+						nextCell.setY(headCell.getY() - headCell.getHeight());
 						break;
 					case WEST:
-						cell.setX(headCell.getX() - headCell.getWidth());
-						cell.setY(headCell.getY());
+						nextCell.setX(headCell.getX() - headCell.getWidth());
+						nextCell.setY(headCell.getY());
 						break;
 					case SOUTH:
-						cell.setX(headCell.getX());
-						cell.setY(headCell.getY() + headCell.getHeight());
+						nextCell.setX(headCell.getX());
+						nextCell.setY(headCell.getY() + headCell.getHeight());
 						break;
 					}
-					if (!checkWallCollision(arena, cell) && !checkSnakeCollision(arena, cell)) {
-						snake.getCells().add(0, cell);
+					if (!checkWallCollision(arena, nextCell) && !checkSnakeCollision(arena, nextCell)) {
+						snake.getCells().add(0, nextCell);
 						snake.setScore(snake.getScore() + POINTS_TURN);
-						if (checkFoodCollision(arena, cell)) {
+						if (checkFoodCollision(arena, nextCell)) {
 							snake.setScore(snake.getScore() + POINTS_FOOD);
 							createFood(arena);
+						} else {
+							snake.getCells().remove(snake.getCells().size() - 1);
 						}
 					} else {
 						kill(arena, snake);
