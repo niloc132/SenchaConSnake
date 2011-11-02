@@ -40,6 +40,8 @@ public class GameEngine {
 	protected static final double DELTA = 0.025;
 	private static final long POINTS_TURN = 1L;
 	private static final long POINTS_FOOD = 100L;
+	
+	private static final double CELL_SIZE = 0.02;
 
 	private final Map<String, Arena> arenas = new HashMap<String, Arena>();
 	private final Map<String, Snake> userSnake = new HashMap<String, Snake>();
@@ -107,15 +109,7 @@ public class GameEngine {
 		synchronized (arena) {
 			index = arena.getSnakes().size();
 		}
-		final ArrayList<Cell> cells = new ArrayList<Cell>();
-		for (int i = 0; i < 5; ++i) {
-			final double x = 0.25d + index * 0.20d;
-			final double y = 0.25d + 0.02d * i;
-			final Cell cell = new Cell(x, y, 0.02d, 0.02d, Direction.NORTH, Cell.CellType.SNAKE);
-			cells.add(cell);
-		}
-		final Snake snake = new Snake(playerId, cells);
-		snake.setDirection(Direction.NORTH);
+		final Snake snake = createNthSnake(playerId, index);
 		arena.getSnakes().add(snake);
 		synchronized (userArenas) {
 			userArenas.put(playerId, arena);
@@ -123,6 +117,45 @@ public class GameEngine {
 				userSnake.put(playerId, snake);
 			}
 		}
+	}
+
+	private Snake createNthSnake(final String playerId, int index) {
+		final ArrayList<Cell> cells = new ArrayList<Cell>();
+		Direction dir = Direction.values()[index % 4];
+		final double x;
+		final double y;
+		switch (dir) {
+		case NORTH:
+			y = 1;
+			x = 0.20 + (index / 4) * 0.20;
+			break;
+		case EAST:
+			x = 0;
+			y = 0.20 + (index / 4) * 0.20;
+			break;
+		case SOUTH:
+			y = 0;
+			x = 0.20 + (index / 4) * 0.20;
+			break;
+		case WEST:
+			x = 1;
+			y = 0.20 + (index / 4) * 0.20;
+			break;
+		default:
+			assert false : "Some direction must have been selected";
+			x = 0;
+			y = 0;
+			break;
+		}
+
+		
+		for (int i = 0; i < 5; ++i) {
+			final Cell cell = new Cell(x, y, CELL_SIZE, CELL_SIZE, Direction.NORTH, Cell.CellType.SNAKE);
+			cells.add(cell);
+		}
+		final Snake snake = new Snake(playerId, cells);
+		snake.setDirection(dir);
+		return snake;
 	}
 
 	public void start() {
@@ -180,7 +213,7 @@ public class GameEngine {
 		for (final Snake snake : arena.getSnakes()) {
 			if (snake.isAlive()) {
 				synchronized (snake) {
-					final Cell nextCell = new Cell(0, 0, 0.02d, 0.02d, Direction.NORTH, Cell.CellType.SNAKE);
+					final Cell nextCell = new Cell(0, 0, CELL_SIZE, CELL_SIZE, Direction.NORTH, Cell.CellType.SNAKE);
 					nextCell.setDirection(snake.getDirection());
 					final Cell headCell = snake.getCells().get(0);
 					switch (nextCell.getDirection()) {
@@ -284,8 +317,8 @@ public class GameEngine {
 
 	private void createFood(final Arena arena) {
 		final Cell food = new Cell();
-		food.setWidth(0.02d);
-		food.setHeight(0.02d);
+		food.setWidth(CELL_SIZE);
+		food.setHeight(CELL_SIZE);
 		do {
 			food.setX(Math.random());
 			food.setY(Math.random());
