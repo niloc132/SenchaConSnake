@@ -124,23 +124,23 @@ public class GameEngine {
 		Direction dir = Direction.values()[index % 4];
 		final double x;
 		final double y;
-		double pos = 0.20 + (index / 4) * 0.20;
+		double pos = 0.20 + (CELL_SIZE / 2) + (index / 4) * 0.20;
 		pos -= ((int)pos);
 		switch (dir) {
 		case NORTH:
-			y = 1;
+			y = 1 - (CELL_SIZE / 2);
 			x = pos;
 			break;
 		case EAST:
-			x = 0;
+			x = CELL_SIZE / 2;
 			y = pos;
 			break;
 		case SOUTH:
-			y = 0;
+			y = CELL_SIZE / 2;
 			x = pos;
 			break;
 		case WEST:
-			x = 1;
+			x = 1 - (CELL_SIZE / 2);
 			y = pos;
 			break;
 		default:
