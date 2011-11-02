@@ -124,22 +124,24 @@ public class GameEngine {
 		Direction dir = Direction.values()[index % 4];
 		final double x;
 		final double y;
+		double pos = 0.20 + (index / 4) * 0.20;
+		pos -= ((int)pos);
 		switch (dir) {
 		case NORTH:
 			y = 1;
-			x = 0.20 + (index / 4) * 0.20;
+			x = pos;
 			break;
 		case EAST:
 			x = 0;
-			y = 0.20 + (index / 4) * 0.20;
+			y = pos;
 			break;
 		case SOUTH:
 			y = 0;
-			x = 0.20 + (index / 4) * 0.20;
+			x = pos;
 			break;
 		case WEST:
 			x = 1;
-			y = 0.20 + (index / 4) * 0.20;
+			y = pos;
 			break;
 		default:
 			assert false : "Some direction must have been selected";
