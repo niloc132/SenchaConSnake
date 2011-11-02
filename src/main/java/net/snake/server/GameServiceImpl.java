@@ -56,7 +56,7 @@ public class GameServiceImpl extends RemoteServiceServlet implements GameService
 
 	@Override
 	public Arena startGame(final String roomId) throws Exception {
-		engine.startAreana(roomId);
+		engine.startArena(roomId);
 		return engine.getArena(roomId);
 	}
 

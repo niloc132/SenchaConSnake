@@ -158,14 +158,13 @@ public class GameEngine {
 	/**
 	 * @param roomId
 	 */
-	public void startAreana(final String roomId) {
+	public void startArena(final String roomId) {
 		final Arena arena = getArena(roomId);
 		if (arena.getState() == State.INITIALIZING || arena.getState() == State.GAMEOVER) {
 			synchronized (arena) {
 				arena.setState(State.RUNNING);
 			}
 		}
-
 	}
 
 	public void stop() throws InterruptedException {
@@ -177,6 +176,7 @@ public class GameEngine {
 	 * @param arena
 	 */
 	protected void processArena(final Arena arena) {
+		int numAlive = 0;
 		for (final Snake snake : arena.getSnakes()) {
 			if (snake.isAlive()) {
 				synchronized (snake) {
@@ -210,18 +210,14 @@ public class GameEngine {
 						} else {
 							snake.getCells().remove(snake.getCells().size() - 1);
 						}
+						++numAlive;
 					} else {
 						kill(arena, snake);
 					}
 				}
 			}
 		}
-		int numAlive = 0;
-		for (final Snake snake : arena.getSnakes()) {
-			if (snake.isAlive()) {
-				++numAlive;
-			}
-		}
+
 		if (numAlive == 0) {
 			arena.setState(State.GAMEOVER);
 		}
