@@ -28,9 +28,9 @@ public class GameEngine {
 		}
 
 		public boolean intersects(final PreciseRectangle other) {
-			final boolean intersectX = (this.getX() > other.getX() && this.getX() < other.getX() + other.getWidth())
+			final boolean intersectX = (this.getX() >= other.getX() && this.getX() < other.getX() + other.getWidth())
 					|| (other.getX() > this.getX() && other.getX() < this.getX() + this.getWidth());
-			final boolean intersectY = (this.getY() > other.getY() && this.getY() < other.getY() + other.getHeight())
+			final boolean intersectY = (this.getY() >= other.getY() && this.getY() < other.getY() + other.getHeight())
 					|| (other.getY() > this.getY() && other.getY() < this.getY() + this.getHeight());
 			return intersectX && intersectY;
 		}
