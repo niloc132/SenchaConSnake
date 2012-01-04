@@ -9,7 +9,6 @@ import net.snake.client.images.SnakeImages;
 import net.snake.shared.models.Arena;
 import net.snake.shared.models.Direction;
 import net.snake.shared.models.Snake;
-import net.snake.shared.models.User;
 import net.snake.shared.models.Snake.SnakeProperties;
 import net.snake.shared.services.GameService;
 import net.snake.shared.services.GameServiceAsync;

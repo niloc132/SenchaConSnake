@@ -4,7 +4,6 @@ import net.snake.client.event.ArenaTickEvent;
 import net.snake.client.event.DirectionCommandEvent;
 import net.snake.client.event.DirectionCommandEvent.DirectionCommandHandler;
 import net.snake.client.widget.ArenaView;
-import net.snake.client.widget.CustomViewport;
 import net.snake.client.widget.SideBar;
 import net.snake.shared.models.Arena;
 import net.snake.shared.models.Direction;
@@ -20,6 +19,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.BorderLayoutContainer.BorderLayoutData;
+import com.sencha.gxt.widget.core.client.container.Viewport;
 
 public class ActiveGame {
 	private final EventBus bus;
@@ -54,7 +54,7 @@ public class ActiveGame {
 		root.setCenterWidget(view);
 		
 		// attach everything to the page
-		CustomViewport vp = new CustomViewport();
+		Viewport vp = new Viewport();
 		vp.add(root);
 		RootPanel.get().add(vp);
 		

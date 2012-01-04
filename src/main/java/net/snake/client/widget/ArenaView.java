@@ -9,8 +9,6 @@ import net.snake.shared.models.Snake;
 
 import com.sencha.gxt.chart.client.draw.Color;
 import com.sencha.gxt.chart.client.draw.DrawComponent;
-import com.sencha.gxt.chart.client.draw.Polygon;
-import com.sencha.gxt.chart.client.draw.path.PathSprite;
 import com.sencha.gxt.chart.client.draw.sprite.CircleSprite;
 import com.sencha.gxt.chart.client.draw.sprite.RectangleSprite;
 import com.sencha.gxt.chart.client.draw.sprite.Sprite;
@@ -94,7 +92,7 @@ public class ArenaView extends Composite
 
         drawWalls();
 
-        drawComponent.redraw();
+        drawComponent.redrawSurface();
     }
 
 
