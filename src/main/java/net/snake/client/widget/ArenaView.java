@@ -92,7 +92,7 @@ public class ArenaView extends Composite
 
         drawWalls();
 
-        drawComponent.redrawSurface();
+        drawComponent.redrawSurfaceForced();
     }
 
 
